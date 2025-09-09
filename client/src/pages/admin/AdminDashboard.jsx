@@ -42,11 +42,41 @@ const AdminDashboard = () => {
   ];
 
   const quickActions = [
-    { title: 'Yeni Öğrenci Ekle', description: 'Sisteme yeni öğrenci kaydı oluştur', icon: Users, color: 'blue' },
-    { title: 'Yeni Ders Ekle', description: 'Yeni ders tanımı ve içeriği oluştur', icon: BookOpen, color: 'green' },
-    { title: 'Kayıt İşlemleri', description: 'Öğrenci-ders eşleştirmelerini yönet', icon: UserCheck, color: 'purple' },
-    { title: 'Raporlar', description: 'Sistem raporlarını görüntüle ve dışa aktar', icon: BarChart3, color: 'orange' }
+    { 
+      title: 'Öğrenci Yönetimi', 
+      description: 'Öğrencileri görüntüle, ekle, düzenle ve sil', 
+      icon: Users, 
+      color: 'blue',
+      route: ROUTES.ADMIN.STUDENTS
+    },
+    { 
+      title: 'Ders Yönetimi', 
+      description: 'Dersleri yönet ve yeni ders tanımları oluştur', 
+      icon: BookOpen, 
+      color: 'green',
+      route: ROUTES.ADMIN.LESSONS
+    },
+    { 
+      title: 'Kayıt İşlemleri', 
+      description: 'Öğrenci-ders eşleştirmelerini yönet', 
+      icon: UserCheck, 
+      color: 'purple',
+      route: ROUTES.ADMIN.ENROLLMENTS
+    },
+    { 
+      title: 'Raporlar', 
+      description: 'Sistem raporlarını görüntüle ve dışa aktar', 
+      icon: BarChart3, 
+      color: 'orange',
+      route: '#' // Henüz raporlar sayfası yok
+    }
   ];
+
+  const handleQuickAction = (route) => {
+    if (route && route !== '#') {
+      navigate(route);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -76,21 +106,21 @@ const AdminDashboard = () => {
                   <p className="text-sm font-medium text-gray-900">
                     {user?.firstName} {user?.lastName}
                   </p>
-                  <p className="text-xs text-gray-500">Sistem Yöneticisi</p>
+                  <p className="text-xs text-gray-500">{user?.email}</p>
                 </div>
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center">
-                  <span className="text-white text-sm font-semibold">
-                    {user?.firstName?.charAt(0)}{user?.lastName?.charAt(0)}
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center">
+                  <span className="text-white text-sm font-medium">
+                    {user?.firstName?.[0]}{user?.lastName?.[0]}
                   </span>
                 </div>
               </div>
               
               <button
                 onClick={handleLogout}
-                className="inline-flex items-center px-4 py-2 border border-red-300 text-sm font-medium rounded-lg text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors"
+                className="flex items-center px-3 py-2 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
               >
                 <LogOut className="w-4 h-4 mr-2" />
-                Çıkış Yap
+                Çıkış
               </button>
             </div>
           </div>
@@ -144,7 +174,10 @@ const AdminDashboard = () => {
           <div className="mb-8">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-semibold text-gray-900">Hızlı İşlemler</h3>
-              <button className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={() => navigate(ROUTES.ADMIN.STUDENTS)}
+                className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+              >
                 <PlusCircle className="w-4 h-4 mr-2" />
                 Yeni İşlem
               </button>
@@ -155,6 +188,7 @@ const AdminDashboard = () => {
                 <div 
                   key={index} 
                   className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-md hover:border-blue-200 transition-all cursor-pointer group"
+                  onClick={() => handleQuickAction(action.route)}
                 >
                   <div className={`w-12 h-12 bg-${action.color}-100 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                     <action.icon className={`w-6 h-6 text-${action.color}-600`} />

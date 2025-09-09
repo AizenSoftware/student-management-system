@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Login from './pages/auth/Login';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminStudents from './pages/admin/AdminStudents';
 import StudentDashboard from './pages/student/StudentDashboard';
 import { USER_ROLES, ROUTES } from './utils/constants';
 
@@ -14,6 +15,7 @@ function App() {
       <Routes>
         <Route path={ROUTES.LOGIN} element={<Login />} />
         
+        {/* Admin Routes */}
         <Route 
           path={ROUTES.ADMIN.DASHBOARD} 
           element={
@@ -24,6 +26,16 @@ function App() {
         />
         
         <Route 
+          path={ROUTES.ADMIN.STUDENTS} 
+          element={
+            isAuthenticated && user?.role === USER_ROLES.ADMIN ? 
+            <AdminStudents /> : 
+            <Navigate to={ROUTES.LOGIN} />
+          } 
+        />
+        
+        {/* Student Routes */}
+        <Route 
           path={ROUTES.STUDENT.DASHBOARD} 
           element={
             isAuthenticated && user?.role === USER_ROLES.STUDENT ? 
@@ -32,6 +44,7 @@ function App() {
           } 
         />
         
+        {/* Default Routes */}
         <Route 
           path="/" 
           element={
