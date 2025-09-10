@@ -1,0 +1,44 @@
+# Node modules
+node_modules
+npm-debug.log*
+
+# Build output
+dist
+build
+
+# Environment files
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Logs
+logs
+*.log
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage reports
+coverage
+
+# Temporary files
+*.tmp
+*.temp
+
+# Docker
+Dockerfile
+.dockerignore
+nginx.conf
+
+# Documentation
+README.md

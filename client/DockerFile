@@ -1,0 +1,32 @@
+# Multi-stage build
+# Stage 1: Build the React app
+FROM node:18-alpine as build
+
+WORKDIR /app
+
+# Package dosyalarını kopyala
+COPY package*.json ./
+
+# Dependencies'leri yükle
+RUN npm ci
+
+# Uygulama kodunu kopyala
+COPY . .
+
+# Production build oluştur
+RUN npm run build
+
+# Stage 2: Serve the app with nginx
+FROM nginx:alpine
+
+# Nginx config dosyasını kopyala
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Build dosyalarını nginx'e kopyala
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Port'u expose et
+EXPOSE 80
+
+# Nginx'i başlat
+CMD ["nginx", "-g", "daemon off;"]

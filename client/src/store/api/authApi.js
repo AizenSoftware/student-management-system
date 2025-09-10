@@ -9,12 +9,14 @@ export const authApi = apiSlice.injectEndpoints({
         method: 'POST',
         body: credentials,
       }),
+      invalidatesTags: ['User',"Student"],
     }),
     logout: builder.mutation({
       query: () => ({
         url: API_ENDPOINTS.AUTH.LOGOUT,
         method: 'POST',
       }),
+      invalidatesTags: ['User',"Student"],
     }),
     getProfile: builder.query({
       query: () => API_ENDPOINTS.AUTH.PROFILE,

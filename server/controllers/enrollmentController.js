@@ -10,24 +10,24 @@ export const createEnrollment = asyncHandler(async (req, res) => {
   // Student kontrolü
   const student = await User.findOne({ _id: studentId, role: 'student' });
   if (!student) {
-    return res.status(404).json({ message: 'Student not found' });
+    return res.status(404).json({ message: 'Öğrenci bulunamadı' });
   }
 
   // Lesson kontrolü
   const lesson = await Lesson.findById(lessonId);
   if (!lesson) {
-    return res.status(404).json({ message: 'Lesson not found' });
+    return res.status(404).json({ message: 'Ders bulunamadı' });
   }
 
   // Kapasite kontrolü
   if (!lesson.hasCapacity()) {
-    return res.status(400).json({ message: 'Lesson is full' });
+    return res.status(400).json({ message: 'Ders dolu' });
   }
 
   // Zaten kayıtlı mı kontrol et
   const existingEnrollment = await Enrollment.isStudentEnrolled(studentId, lessonId);
   if (existingEnrollment) {
-    return res.status(400).json({ message: 'Student is already enrolled in this lesson' });
+    return res.status(400).json({ message: 'Öğrenci bu derse zaten kayıtlı' });
   }
 
   // Enrollment oluştur
@@ -46,7 +46,7 @@ export const createEnrollment = asyncHandler(async (req, res) => {
 
   res.status(201).json({
     success: true,
-    message: 'Student enrolled successfully',
+    message: 'Öğrenci başarıyla derse kaydedildi.',
     enrollment
   });
 });

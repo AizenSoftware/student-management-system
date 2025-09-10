@@ -65,6 +65,7 @@ export const adminApi = apiSlice.injectEndpoints({
       }),
       providesTags: ['Lesson'],
     }),
+    
     getLesson: builder.query({
       query: (id) => ({
         url: API_ENDPOINTS.ADMIN.LESSON_BY_ID(id),
@@ -72,6 +73,7 @@ export const adminApi = apiSlice.injectEndpoints({
       }),
       providesTags: (result, error, id) => [{ type: 'Lesson', id }],
     }),
+    
     createLesson: builder.mutation({
       query: (lessonData) => ({
         url: API_ENDPOINTS.ADMIN.LESSONS,
@@ -80,6 +82,7 @@ export const adminApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['Lesson'],
     }), 
+    
     updateLesson: builder.mutation({
       query: ({ id, ...lessonData }) => ({
         url: API_ENDPOINTS.ADMIN.LESSON_BY_ID(id),
@@ -88,6 +91,7 @@ export const adminApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: (result, error, { id }) => [{ type: 'Lesson', id }, 'Lesson'],
     }),
+    
     deleteLesson: builder.mutation({
       query: (id) => ({
         url: API_ENDPOINTS.ADMIN.LESSON_BY_ID(id),
@@ -95,9 +99,61 @@ export const adminApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: (result, error, id) => [{ type: 'Lesson', id }, 'Lesson'],
     }),
+    
     getLessonStats: builder.query({
       query: () => ({
         url: API_ENDPOINTS.ADMIN.LESSON_STATS,
+        method: 'GET',
+      }),
+      providesTags: ['Lesson'],
+    }),
+
+    // YENİ: Derse kayıtlı öğrencileri getir
+    getLessonStudents: builder.query({
+      query: (lessonId) => ({
+        url: API_ENDPOINTS.ADMIN.LESSON_STUDENTS(lessonId),
+        method: 'GET',
+      }),
+      providesTags: (result, error, lessonId) => [
+        { type: 'Enrollment', id: lessonId }
+      ],
+    }),
+
+    // Enrollment işlemleri
+    getEnrollments: builder.query({
+      query: ({ page = 1, limit = 10, search = '' } = {}) => ({
+        url: `${API_ENDPOINTS.ADMIN.ENROLLMENTS}?page=${page}&limit=${limit}&search=${search}`,
+        method: 'GET',
+      }),
+      providesTags: ['Enrollment'],
+    }),
+    createEnrollment: builder.mutation({
+      query: (enrollmentData) => ({
+        url: API_ENDPOINTS.ADMIN.ENROLLMENTS,
+        method: 'POST',
+        body: enrollmentData,
+      }),
+      invalidatesTags: ['Enrollment'],
+    }),
+    deleteEnrollment: builder.mutation({
+      query: (id) => ({
+        url: API_ENDPOINTS.ADMIN.ENROLLMENT_BY_ID(id),
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Enrollment'],
+    }),
+    // Dropdown için tüm öğrencileri getir
+    getAllStudentsForSelect: builder.query({
+      query: () => ({
+        url: API_ENDPOINTS.ADMIN.STUDENTS,
+        method: 'GET',
+      }),
+      providesTags: ['Student'],
+    }),
+    // Dropdown için tüm dersleri getir
+    getAllLessonsForSelect: builder.query({
+      query: () => ({
+        url: API_ENDPOINTS.ADMIN.LESSONS,
         method: 'GET',
       }),
       providesTags: ['Lesson'],
@@ -106,12 +162,14 @@ export const adminApi = apiSlice.injectEndpoints({
 });
 
 export const {
+  // Öğrenci işlemleri
   useGetStudentsQuery,
   useGetStudentQuery,
   useCreateStudentMutation,
   useUpdateStudentMutation,
   useDeleteStudentMutation,
   useGetStudentLessonsQuery,
+  
   // Ders işlemleri
   useGetLessonsQuery,
   useGetLessonQuery,
@@ -119,4 +177,14 @@ export const {
   useUpdateLessonMutation,
   useDeleteLessonMutation,
   useGetLessonStatsQuery,
+  useGetLessonStudentsQuery,
+  
+  // Enrollment işlemleri
+  useGetEnrollmentsQuery,
+  useCreateEnrollmentMutation,
+  useDeleteEnrollmentMutation,
+  
+  // Dropdown için hook'lar
+  useGetAllStudentsForSelectQuery,
+  useGetAllLessonsForSelectQuery,
 } = adminApi;

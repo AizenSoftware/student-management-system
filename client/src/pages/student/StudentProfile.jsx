@@ -25,6 +25,7 @@ import {
 } from '../../store/api/studentApi';
 import { logout, setCredentials } from '../../store/features/authSlice';
 import { ROUTES } from '../../utils/constants';
+import { toast } from 'react-toastify';
 
 const StudentProfile = () => {
   const user = useSelector(state => state.auth.user);
@@ -52,7 +53,6 @@ const StudentProfile = () => {
   
   const [updateProfile, { isLoading: updateLoading }] = useUpdateMyProfileMutation();
 
-  // Form data'yı user bilgileriyle doldur
   useEffect(() => {
     if (profileData?.student) {
       const student = profileData.student;
@@ -68,8 +68,10 @@ const StudentProfile = () => {
   const handleLogout = async () => {
     try {
       await logoutMutation().unwrap();
+      toast.success('Başarıyla çıkış yapıldı');
     } catch (error) {
       console.error('Logout API failed:', error);
+      toast.error('Çıkış yaparken hata oluştu: ' + (error.data?.message || error.message));
     }
     
     dispatch(logout());

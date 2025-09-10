@@ -5,11 +5,14 @@ import { Loader2 } from 'lucide-react';
 import Login from './pages/auth/Login';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminStudents from './pages/admin/AdminStudents';
+import AdminLessons from './pages/admin/AdminLessons';
+import AdminEnrollments from './pages/admin/AdminEnrollments';
 import StudentDashboard from './pages/student/StudentDashboard';
 import StudentMyLessons from './pages/student/StudentMyLessons';
+import StudentLessons from './pages/student/StudentLessons';
+import StudentProfile from './pages/student/StudentProfile';
 import { USER_ROLES, ROUTES } from './utils/constants';
 import { loadUserFromStorage } from './store/features/authSlice';
-import AdminLessons from './pages/admin/AdminLessons';
 
 function App() {
   const { user, isAuthenticated } = useSelector(state => state.auth);
@@ -87,6 +90,16 @@ function App() {
           element={
             isAuthenticated && user?.role === USER_ROLES.ADMIN ? 
             <AdminLessons /> : 
+            <Navigate to={ROUTES.LOGIN} />
+          } 
+        />
+        
+        {/* YENİ: Admin Enrollments Route */}
+        <Route 
+          path={ROUTES.ADMIN.ENROLLMENTS} 
+          element={
+            isAuthenticated && user?.role === USER_ROLES.ADMIN ? 
+            <AdminEnrollments /> : 
             <Navigate to={ROUTES.LOGIN} />
           } 
         />

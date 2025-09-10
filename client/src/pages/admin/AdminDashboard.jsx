@@ -63,13 +63,6 @@ const AdminDashboard = () => {
       color: 'purple',
       route: ROUTES.ADMIN.ENROLLMENTS
     },
-    { 
-      title: 'Raporlar', 
-      description: 'Sistem raporlarını görüntüle ve dışa aktar', 
-      icon: BarChart3, 
-      color: 'orange',
-      route: '#' // Henüz raporlar sayfası yok
-    }
   ];
 
   const handleQuickAction = (route) => {
@@ -147,18 +140,7 @@ const AdminDashboard = () => {
 
           {/* Quick Actions */}
           <div className="mb-8">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-semibold text-gray-900">Hızlı İşlemler</h3>
-              <button 
-                onClick={() => navigate(ROUTES.ADMIN.STUDENTS)}
-                className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                <PlusCircle className="w-4 h-4 mr-2" />
-                Yeni İşlem
-              </button>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {quickActions.map((action, index) => (
                 <div 
                   key={index} 
