@@ -62,6 +62,7 @@ export const ROUTES = {
     DASHBOARD: '/student',
     PROFILE: '/student/profile',
     LESSONS: '/student/lessons',
+    MY_LESSONS: '/student/my-lessons',
   },
 };
 

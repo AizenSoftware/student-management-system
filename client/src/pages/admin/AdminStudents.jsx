@@ -19,12 +19,14 @@ import {
   Mail,
   User,
   Save,
-  Loader2
+  Loader2,
+  BookOpen
 } from 'lucide-react';
 import { useLogoutMutation } from '../../store/api/authApi';
 import { 
   useGetStudentsQuery, 
   useGetStudentQuery,
+  useGetStudentLessonsQuery,
   useCreateStudentMutation,
   useUpdateStudentMutation,
   useDeleteStudentMutation 
@@ -59,6 +61,15 @@ const AdminStudents = () => {
     isLoading: studentDetailLoading 
   } = useGetStudentQuery(selectedStudentId, {
     skip: !selectedStudentId,
+  });
+
+  // Öğrencinin kayıtlı derslerini getir
+  const {
+    data: studentLessonsData,
+    isLoading: studentLessonsLoading,
+    error: studentLessonsError
+  } = useGetStudentLessonsQuery(selectedStudentId, {
+    skip: !selectedStudentId || !showDetailModal,
   });
 
   const [createStudent, { isLoading: createLoading }] = useCreateStudentMutation();
@@ -596,10 +607,10 @@ const AdminStudents = () => {
         </div>
       )}
 
-      {/* Student Detail Modal */}
+      {/* Student Detail Modal with Enrolled Lessons */}
       {showDetailModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-xl max-w-md w-full">
+          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
               <h3 className="text-lg font-semibold text-gray-900">Öğrenci Detayları</h3>
               <button
@@ -615,51 +626,128 @@ const AdminStudents = () => {
                   <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
                 </div>
               ) : studentDetail?.student ? (
-                <div className="space-y-4">
-                  <div className="text-center">
-                    <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <span className="text-white text-xl font-bold">
-                        {studentDetail.student.firstName[0]}{studentDetail.student.lastName[0]}
-                      </span>
+                <div className="space-y-6">
+                  {/* Öğrenci Bilgileri */}
+                  <div>
+                    <div className="text-center mb-6">
+                      <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span className="text-white text-xl font-bold">
+                          {studentDetail.student.firstName[0]}{studentDetail.student.lastName[0]}
+                        </span>
+                      </div>
+                      <h4 className="text-xl font-semibold text-gray-900">
+                        {studentDetail.student.firstName} {studentDetail.student.lastName}
+                      </h4>
+                      <p className="text-gray-500">Öğrenci ID: {studentDetail.student._id.slice(-6)}</p>
                     </div>
-                    <h4 className="text-xl font-semibold text-gray-900">
-                      {studentDetail.student.firstName} {studentDetail.student.lastName}
-                    </h4>
-                    <p className="text-gray-500">Öğrenci ID: {studentDetail.student._id.slice(-6)}</p>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="flex items-center space-x-3">
+                        <Mail className="w-5 h-5 text-gray-400" />
+                        <div>
+                          <p className="text-sm text-gray-500">Email</p>
+                          <p className="text-gray-900">{studentDetail.student.email}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center space-x-3">
+                        <Calendar className="w-5 h-5 text-gray-400" />
+                        <div>
+                          <p className="text-sm text-gray-500">Doğum Tarihi</p>
+                          <p className="text-gray-900">{formatDate(studentDetail.student.dateOfBirth)}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center space-x-3">
+                        <GraduationCap className="w-5 h-5 text-gray-400" />
+                        <div>
+                          <p className="text-sm text-gray-500">Kayıt Tarihi</p>
+                          <p className="text-gray-900">{formatDate(studentDetail.student.createdAt)}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center space-x-3">
+                        <User className="w-5 h-5 text-gray-400" />
+                        <div>
+                          <p className="text-sm text-gray-500">Rol</p>
+                          <p className="text-gray-900 capitalize">{studentDetail.student.role}</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  
-                  <div className="space-y-3">
-                    <div className="flex items-center space-x-3">
-                      <Mail className="w-5 h-5 text-gray-400" />
-                      <div>
-                        <p className="text-sm text-gray-500">Email</p>
-                        <p className="text-gray-900">{studentDetail.student.email}</p>
-                      </div>
+
+                  {/* Kayıtlı Dersler Bölümü */}
+                  <div className="border-t border-gray-200 pt-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h5 className="text-lg font-semibold text-gray-900">Kayıtlı Dersler</h5>
+                      {studentLessonsData?.totalLessons > 0 && (
+                        <span className="px-2 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">
+                          {studentLessonsData.totalLessons} ders
+                        </span>
+                      )}
                     </div>
                     
-                    <div className="flex items-center space-x-3">
-                      <Calendar className="w-5 h-5 text-gray-400" />
-                      <div>
-                        <p className="text-sm text-gray-500">Doğum Tarihi</p>
-                        <p className="text-gray-900">{formatDate(studentDetail.student.dateOfBirth)}</p>
+                    {studentLessonsLoading ? (
+                      <div className="flex items-center justify-center py-8">
+                        <Loader2 className="w-6 h-6 text-blue-600 animate-spin" />
+                        <span className="ml-2 text-gray-600">Dersler yükleniyor...</span>
                       </div>
-                    </div>
-                    
-                    <div className="flex items-center space-x-3">
-                      <GraduationCap className="w-5 h-5 text-gray-400" />
-                      <div>
-                        <p className="text-sm text-gray-500">Kayıt Tarihi</p>
-                        <p className="text-gray-900">{formatDate(studentDetail.student.createdAt)}</p>
+                    ) : studentLessonsError ? (
+                      <div className="text-center py-8">
+                        <p className="text-red-600 mb-2">Dersler yüklenirken hata oluştu</p>
+                        <p className="text-sm text-gray-500">
+                          {studentLessonsError.data?.message || studentLessonsError.message}
+                        </p>
                       </div>
-                    </div>
-                    
-                    <div className="flex items-center space-x-3">
-                      <User className="w-5 h-5 text-gray-400" />
-                      <div>
-                        <p className="text-sm text-gray-500">Rol</p>
-                        <p className="text-gray-900 capitalize">{studentDetail.student.role}</p>
+                    ) : studentLessonsData?.lessons?.length > 0 ? (
+                      <div className="space-y-3">
+                        {studentLessonsData.lessons.map((lessonEnrollment) => (
+                          <div 
+                            key={lessonEnrollment._id} 
+                            className="border border-gray-200 rounded-lg p-4 bg-gray-50"
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex-1">
+                                <div className="flex items-center space-x-3">
+                                  <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-blue-500 rounded-lg flex items-center justify-center">
+                                    <BookOpen className="w-4 h-4 text-white" />
+                                  </div>
+                                  <div>
+                                    <h6 className="font-medium text-gray-900">
+                                      {lessonEnrollment.lesson.name}
+                                    </h6>
+                                    <p className="text-sm text-gray-500">
+                                      {lessonEnrollment.lesson.code} • {lessonEnrollment.lesson.credits} Kredi
+                                    </p>
+                                  </div>
+                                </div>
+                                <div className="mt-2 text-sm text-gray-600">
+                                  <span>Öğretmen: {lessonEnrollment.lesson.instructor}</span>
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <div className="text-xs text-gray-500">
+                                  Kayıt: {formatDate(lessonEnrollment.createdAt)}
+                                </div>
+                                <div className="text-xs">
+                                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                    Aktif
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    </div>
+                    ) : (
+                      <div className="text-center py-8">
+                        <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                        <p className="text-gray-500 mb-2">Bu öğrenci henüz hiçbir derse kayıtlı değil</p>
+                        <p className="text-sm text-gray-400">
+                          Öğrenci ders kayıt sistemi üzerinden derslere kayıt olabilir.
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
               ) : (

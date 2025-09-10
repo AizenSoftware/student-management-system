@@ -4,8 +4,14 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Loader2 } from 'lucide-react';
 import { useGetProfileQuery } from '../../store/api/authApi';
-import { setCredentials, logout, setLoading } from '../../store/features/authSlice';
-import { selectIsAuthenticated, selectIsLoading, selectCurrentUser } from '../../store/features/authSlice';
+import { 
+  setCredentials, 
+  logout, 
+  setLoading,
+  selectIsAuthenticated, 
+  selectIsLoading, 
+  selectCurrentUser 
+} from '../../store/features/authSlice';
 import { ROUTES, USER_ROLES } from '../../utils/constants';
 
 const ProtectedRoute = ({ children, requiredRole = null }) => {
