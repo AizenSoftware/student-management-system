@@ -5,15 +5,18 @@ dotenv.config();
 
 const connectDB = async () => {
   try {
-    const MONGO_USER = process.env.MONGO_INITDB_ROOT_USERNAME;
-    const MONGO_PASS = process.env.MONGO_INITDB_ROOT_PASSWORD;
-    const MONGO_DB   = process.env.MONGO_INITDB_DATABASE;
-    const MONGO_HOST = "mongo"; // Docker Compose service adı
+    // MongoDB Atlas connection string'ini environment variable'dan al
+    const MONGO_URI = process.env.MONGODB_URI;
 
-    const MONGO_URI = `mongodb://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}:27017/${MONGO_DB}?authSource=admin`;
+    if (!MONGO_URI) {
+      throw new Error('MONGODB_URI environment variable is not defined');
+    }
 
+    console.log('🌐 Connecting to MongoDB Atlas...');
+    
     const conn = await mongoose.connect(MONGO_URI);
     console.log(`🍃 MongoDB Connected: ${conn.connection.host}`);
+    console.log(`📦 Database: ${conn.connection.name}`);
 
     mongoose.connection.on('error', (err) => {
       console.error('MongoDB connection error:', err);

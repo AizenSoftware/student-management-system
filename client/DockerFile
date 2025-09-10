@@ -1,27 +1,32 @@
-# Super Simple Dockerfile - nginx.conf gerekmez
-FROM node:18-alpine as build
+# Client Dockerfile - Vite React için
+FROM node:18-alpine as builder
 
+# Çalışma dizini
 WORKDIR /app
+
+# Package dosyalarını kopyala
 COPY package*.json ./
-RUN npm ci
+
+# Dependencies yükle
+RUN npm install
+
+# Kaynak kodları kopyala
 COPY . .
+
+# Vite build et
 RUN npm run build
 
-# Nginx ile serve et
+# Nginx stage
 FROM nginx:alpine
 
-# React Router için basit config
-RUN echo 'server { \
-    listen 80; \
-    location / { \
-        root /usr/share/nginx/html; \
-        try_files $uri $uri/ /index.html; \
-    } \
-    location /api/ { \
-        proxy_pass http://backend:5000; \
-    } \
-}' > /etc/nginx/conf.d/default.conf
+# Build dosyalarını kopyala (Vite dist klasörü kullanır)
+COPY --from=builder /app/dist /usr/share/nginx/html
 
-COPY --from=build /app/dist /usr/share/nginx/html
+# Nginx yapılandırması
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Port expose et
 EXPOSE 80
+
+# Nginx başlat
 CMD ["nginx", "-g", "daemon off;"]

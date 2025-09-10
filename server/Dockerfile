@@ -1,4 +1,4 @@
-# EN BASİT Backend Dockerfile - app.js için
+# Backend Dockerfile
 FROM node:18-alpine
 
 # Çalışma dizini
@@ -7,17 +7,14 @@ WORKDIR /app
 # Package dosyalarını kopyala
 COPY package*.json ./
 
-# Dependencies yükle (tümü)
+# Dependencies yükle
 RUN npm install
 
-# TÜM dosyaları kopyala
+# Tüm dosyaları kopyala
 COPY . .
 
 # Port expose et
 EXPOSE 5000
 
-# Debug: Dosyaları listele
-RUN echo "=== Copied files ===" && ls -la
-
-# app.js dosyasını direkt çalıştır
+# app.js'i çalıştır
 CMD ["node", "app.js"]

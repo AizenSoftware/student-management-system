@@ -33,7 +33,7 @@ docker-compose up --build -d
 ```
 
 ### 4. Uygulamaya Erişin
-- **Frontend**: http://localhost:3000
+- **Frontend**: http://localhost:5173
 - **Backend API**: http://localhost:5000
 - **MongoDB**: localhost:27017
 

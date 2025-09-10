@@ -28,17 +28,12 @@ logs
 .DS_Store
 Thumbs.db
 
+# Vite cache
+.vite
+
 # Coverage reports
 coverage
 
 # Temporary files
 *.tmp
 *.temp
-
-# Docker
-Dockerfile
-.dockerignore
-nginx.conf
-
-# Documentation
-README.md

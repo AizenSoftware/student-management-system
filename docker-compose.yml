@@ -1,81 +1,41 @@
-services:
-  # MongoDB Database
-  mongodb:
-    image: mongo:7.0
-    container_name: student_management_system_mongodb
-    restart: unless-stopped
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: password123
-      MONGO_INITDB_DATABASE: student_management_system
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongodb_data:/data/db
-      - ./server/scripts/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
-    networks:
-      - student_management_network
-    healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.admin.command('ping')"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
+version: '3.8'
 
-  # Backend API
+services:
+  # Backend Service - MongoDB Atlas'a bağlanır
   backend:
-    build:
+    build: 
       context: ./server
       dockerfile: Dockerfile
-    container_name: student_management_backend
+    container_name: student_backend
     restart: unless-stopped
     environment:
       NODE_ENV: production
       PORT: 5000
-      MONGODB_URI: mongodb://canerbykdr:C.nemesis123@mongodb:27017/student-management-system
-      JWT_EXPIRE: 30d
+      # MongoDB Atlas connection
+      MONGODB_URI: mongodb+srv://canerbykdr:C.nemesis123@cluster0.9ffwk0b.mongodb.net/student-management-system?retryWrites=true&w=majority&appName=Cluster0
+      JWT_SECRET: jwt_secret_key_production_123
       FRONTEND_URL: http://localhost:3000
     ports:
       - "5000:5000"
-    depends_on:
-      mongodb:
-        condition: service_healthy
     networks:
-      - student_management_network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/api/auth/profile"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+      - app_network
 
-  # Frontend React App
+  # Frontend Service
   frontend:
     build:
       context: ./client
-      dockerfile: DockerFile
-    container_name: student_management_frontend
+      dockerfile: Dockerfile
+    container_name: student_frontend
     restart: unless-stopped
     ports:
-      - "5173:80"
+      - "3000:80"
     depends_on:
-      backend:
-        condition: service_healthy
+      - backend
+    environment:
+      VITE_API_URL: http://localhost:5000
     networks:
-      - student_management_network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:80"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
+      - app_network
 
-# Volumes
-volumes:
-  mongodb_data:
-    driver: local
-
-# Networks
 networks:
-  student_management_network:
+  app_network:
     driver: bridge
