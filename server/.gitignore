@@ -1,40 +1,45 @@
-# Node.js bağımlılıkları
-node_modules/
+# Node modules
+node_modules
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
 
-# Çevresel değişkenler
-.env
+# Environment files (production'da .env dosyası kullanmayacağız)
 .env.local
-.env.*.local
+.env.development
+.env.test
 
-# Log dosyaları
+# Logs
 logs
 *.log
-logs/*.log
 
-# Sistem dosyaları
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+
+# OS
 .DS_Store
 Thumbs.db
 
-# Build ve cache dosyaları
-dist/
-build/
-.cache/
-.temp/
+# Coverage reports
+coverage
 
-# IDE/Editor ayar dosyaları
-.vscode/
-.idea/
-*.swp
+# Temporary files
+*.tmp
+*.temp
 
-# Coverage ve test çıktıları
-coverage/
-.nyc_output/
+# Documentation
+README.md
+docs/
 
-# Docker
-docker-compose.override.yml
-*.pid
-*.seed
+# Test files
+test/
+tests/
+*.test.js
+*.spec.js
+
+# Docker files (kendi Dockerfile'ını kopyalamaması için)
+Dockerfile*
+.dockerignore

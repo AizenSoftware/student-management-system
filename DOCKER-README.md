@@ -13,7 +13,7 @@ Bu rehber Student Management System'i Docker kullanarak nasıl çalıştıracağ
 
 ### 1. Repository'yi Klonlayın
 ```bash
-git clone 
+git clone <repository-url>
 cd student-management-system
 ```
 
@@ -70,23 +70,34 @@ docker-compose logs mongodb
 
 ## 🛠️ Geliştirme Komutları
 
-### Servisleri Durdurma
+## 🛠️ Geliştirme Komutları
+
+### Production Mode Komutları
 ```bash
 # Tüm servisleri durdur
 docker-compose down
 
 # Volumes ile birlikte durdur (VERİ SİLİNİR!)
 docker-compose down -v
-```
 
-### Servisleri Yeniden Build Etme
-```bash
 # Tüm servisleri yeniden build et
 docker-compose build
 
 # Sadece belirli bir servisi build et
 docker-compose build backend
 docker-compose build frontend
+```
+
+### Development Mode Komutları
+```bash
+# Development servisleri durdur
+docker-compose -f docker-compose.dev.yml down
+
+# Development servisleri yeniden build et
+docker-compose -f docker-compose.dev.yml build
+
+# Development logları takip et
+docker-compose -f docker-compose.dev.yml logs -f
 ```
 
 ### Logları Takip Etme

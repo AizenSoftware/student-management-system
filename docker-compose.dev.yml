@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  # MongoDB Database (aynı)
+  mongodb:
+    image: mongo:7.0
+    container_name: student-management-system
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: student-management-system
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_dev_data:/data/db
+      - ./server/scripts/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    networks:
+      - student_management_network
+
+  # Backend API (Development mode)
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev
+    container_name: student_management_backend_dev
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      PORT: 5000
+      MONGODB_URI: mongodb://admin:password123@mongodb:27017/student_management?authSource=admin
+      JWT_SECRET: dev-secret-key-change-for-production
+      JWT_EXPIRE: 30d
+      FRONTEND_URL: http://localhost:5173
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    depends_on:
+      - mongodb
+    networks:
+      - student_management_network
+
+  # Frontend React App (Development mode with Hot Reload)
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    container_name: student_management_frontend_dev
+    restart: unless-stopped
+    environment:
+      - VITE_API_URL=http://localhost:5000/api
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - student_management_network
+
+# Volumes
+volumes:
+  mongodb_dev_data:
+    driver: local
+
+# Networks
+networks:
+  student_management_network:
+    driver: bridge

@@ -1,32 +1,27 @@
-# Multi-stage build
-# Stage 1: Build the React app
+# Super Simple Dockerfile - nginx.conf gerekmez
 FROM node:18-alpine as build
 
 WORKDIR /app
-
-# Package dosyalarını kopyala
 COPY package*.json ./
-
-# Dependencies'leri yükle
 RUN npm ci
-
-# Uygulama kodunu kopyala
 COPY . .
-
-# Production build oluştur
 RUN npm run build
 
-# Stage 2: Serve the app with nginx
+# Nginx ile serve et
 FROM nginx:alpine
 
-# Nginx config dosyasını kopyala
-COPY nginx.conf /etc/nginx/nginx.conf
+# React Router için basit config
+RUN echo 'server { \
+    listen 80; \
+    location / { \
+        root /usr/share/nginx/html; \
+        try_files $uri $uri/ /index.html; \
+    } \
+    location /api/ { \
+        proxy_pass http://backend:5000; \
+    } \
+}' > /etc/nginx/conf.d/default.conf
 
-# Build dosyalarını nginx'e kopyala
 COPY --from=build /app/dist /usr/share/nginx/html
-
-# Port'u expose et
 EXPOSE 80
-
-# Nginx'i başlat
 CMD ["nginx", "-g", "daemon off;"]

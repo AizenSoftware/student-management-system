@@ -18,12 +18,22 @@ const PORT = process.env.PORT || 5000;
 
 // CORS configuration for cookies
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: 'http://localhost:5173' || process.env.FRONTEND_URL,
   credentials: true // Cookies için gerekli
 }));
 
 app.use(express.json());
 app.use(cookieParser()); // Cookie parser middleware
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'success',
+    message: 'Student Management System API is running',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
 
 
 // Routes

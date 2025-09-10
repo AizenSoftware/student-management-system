@@ -1,24 +1,23 @@
-# Node.js resmi image'ını kullan
+# EN BASİT Backend Dockerfile - app.js için
 FROM node:18-alpine
 
-# Çalışma dizinini ayarla
+# Çalışma dizini
 WORKDIR /app
 
 # Package dosyalarını kopyala
 COPY package*.json ./
 
-# Dependencies'leri yükle
-RUN npm ci --only=production
+# Dependencies yükle (tümü)
+RUN npm install
 
-# Uygulama kodunu kopyala
+# TÜM dosyaları kopyala
 COPY . .
 
-# Port'u expose et
+# Port expose et
 EXPOSE 5000
 
-# Health check ekle
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:5000/api/auth/profile || exit 1
+# Debug: Dosyaları listele
+RUN echo "=== Copied files ===" && ls -la
 
-# Uygulamayı başlat
-CMD ["npm", "start"]
+# app.js dosyasını direkt çalıştır
+CMD ["node", "app.js"]
