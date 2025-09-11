@@ -77,11 +77,35 @@ npm install
 # .env dosyasını oluşturun
 cp .env.example .env
 
-# .env dosyasını düzenleyin
-MONGO_URI=mongodb://localhost:27017/student_management_system
-JWT_SECRET=your_super_secret_jwt_key_here
+## .env dosyasını düzenleyin
+-server dosyası içinde
 NODE_ENV=development
+PORT=5000
+MONGO_INITDB_ROOT_USERNAME=your_username
+MONGO_INITDB_ROOT_PASSWORD=your_password
+MONGO_INITDB_DATABASE=student_management_system
+JWT_SECRET=your_jwt_secret_key_123
+FRONTEND_URL=http://localhost:3000
+
+**STUDENT MANAGEMENT SYSTEM - DOCKERs
+# Database Configuration
+MONGO_ROOT_USERNAME=(mongo_username)
+MONGO_ROOT_PASSWORD=(mongo_password)
+MONGO_DATABASE=student_management_system
+
+# Backend Configuration  
+NODE_ENV=production
+JWT_SECRET=your-super-secret-jwt-key-for-production-change-this-immediately
+JWT_EXPIRE=30d
+
+# Port Configuration
+BACKEND_PORT=5000
+FRONTEND_PORT=5173
+MONGODB_PORT=27017
+
+# URLs
 FRONTEND_URL=http://localhost:5173
+BACKEND_URL=http://localhost:5000
 
 
 ### 3. Frontend Kurulumu
@@ -266,4 +290,5 @@ student-management-system/
 - 📚 Ders yönetimi
 - 🐳 Docker desteği
 - 🧪 Test altyapısı
+
 
