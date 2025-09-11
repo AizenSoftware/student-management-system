@@ -88,13 +88,6 @@ FRONTEND_URL=http://localhost:5173
 cd ../client
 npm install
 
-### 4. MongoDB'yi Başlatın
-
-# Local MongoDB (macOS)
-brew services start mongodb-community
-
-# Local MongoDB (Ubuntu)
-sudo systemctl start mongod
 
 # Docker ile MongoDB
 docker run -d -p 27017:27017 --name mongodb mongo:latest
@@ -148,47 +141,47 @@ Uygulama ilk başlatıldığında otomatik olarak demo hesaplar oluşturulur:
 
 ### Authentication
 
-POST   /api/auth/register    # Kullanıcı kaydı
-POST   /api/auth/login       # Giriş
-GET    /api/auth/profile     # Profil görüntüleme
-PUT    /api/auth/profile     # Profil güncelleme
-POST   /api/auth/logout      # Çıkış
+-POST   /api/auth/register    # Kullanıcı kaydı
+-POST   /api/auth/login       # Giriş
+-GET    /api/auth/profile     # Profil görüntüleme
+-PUT    /api/auth/profile     # Profil güncelleme
+-POST   /api/auth/logout      # Çıkış
 
 
 ### Admin - Öğrenci Yönetimi
 
-GET    /api/admin/students           # Öğrenci listesi
-GET    /api/admin/students/:id       # Öğrenci detayı
-POST   /api/admin/students           # Öğrenci oluştur
-PUT    /api/admin/students/:id       # Öğrenci güncelle
-DELETE /api/admin/students/:id       # Öğrenci sil
+-GET    /api/admin/students           # Öğrenci listesi
+-GET    /api/admin/students/:id       # Öğrenci detayı
+-POST   /api/admin/students           # Öğrenci oluştur
+-PUT    /api/admin/students/:id       # Öğrenci güncelle
+-DELETE /api/admin/students/:id       # Öğrenci sil
 
 ### Admin - Ders Yönetimi
 
-GET    /api/admin/lessons            # Ders listesi
-GET    /api/admin/lessons/:id        # Ders detayı
-POST   /api/admin/lessons            # Ders oluştur
-PUT    /api/admin/lessons/:id        # Ders güncelle
-DELETE /api/admin/lessons/:id        # Ders sil
-GET    /api/admin/lessons/stats      # Ders istatistikleri
+-GET    /api/admin/lessons            # Ders listesi
+-GET    /api/admin/lessons/:id        # Ders detayı
+-POST   /api/admin/lessons            # Ders oluştur
+-PUT    /api/admin/lessons/:id        # Ders güncelle
+-DELETE /api/admin/lessons/:id        # Ders sil
+-GET    /api/admin/lessons/stats      # Ders istatistikleri
 
 
 ### Admin - Kayıt İşlemleri
 
-GET    /api/admin/enrollments                    # Tüm kayıtlar
-POST   /api/admin/enrollments                    # Kayıt oluştur
-DELETE /api/admin/enrollments/:id               # Kayıt sil
-GET    /api/admin/enrollments/student/:id       # Öğrencinin dersleri
-GET    /api/admin/enrollments/lesson/:id        # Dersin öğrencileri
+-GET    /api/admin/enrollments                    # Tüm kayıtlar
+-POST   /api/admin/enrollments                    # Kayıt oluştur
+-DELETE /api/admin/enrollments/:id               # Kayıt sil
+-GET    /api/admin/enrollments/student/:id       # Öğrencinin dersleri
+-GET    /api/admin/enrollments/lesson/:id        # Dersin öğrencileri
 
 
 ### Öğrenci
-GET    /api/student/profile              # Profil
-PUT    /api/student/profile              # Profil güncelle
-GET    /api/student/lessons/my           # Kayıtlı dersler
-GET    /api/student/lessons/available    # Kayıt olunabilir dersler
-POST   /api/student/enroll               # Derse kayıt ol
-DELETE /api/student/drop/:lessonId       # Dersi bırak
+-GET    /api/student/profile              # Profil
+-PUT    /api/student/profile              # Profil güncelle
+-GET    /api/student/lessons/my           # Kayıtlı dersler
+-GET    /api/student/lessons/available    # Kayıt olunabilir dersler
+-POST   /api/student/enroll               # Derse kayıt ol
+-DELETE /api/student/drop/:lessonId       # Dersi bırak
 
 
 ## 🧪 Testler
@@ -273,3 +266,4 @@ student-management-system/
 - 📚 Ders yönetimi
 - 🐳 Docker desteği
 - 🧪 Test altyapısı
+
