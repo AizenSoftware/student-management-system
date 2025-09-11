@@ -47,3 +47,4 @@ app.use('/api/student', studentSelfRoutes);
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
+
