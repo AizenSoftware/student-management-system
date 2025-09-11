@@ -165,9 +165,9 @@ Uygulama ilk başlatıldığında otomatik olarak demo hesaplar oluşturulur:
 
 ### Authentication
 
--POST   /api/auth/register    # Kullanıcı kaydı
--POST   /api/auth/login       # Giriş
--GET    /api/auth/profile     # Profil görüntüleme
+**POST   /api/auth/register    # Kullanıcı kaydı
+**POST   /api/auth/login       # Giriş
+**GET    /api/auth/profile     # Profil görüntüleme
 -PUT    /api/auth/profile     # Profil güncelleme
 -POST   /api/auth/logout      # Çıkış
 
@@ -290,5 +290,6 @@ student-management-system/
 - 📚 Ders yönetimi
 - 🐳 Docker desteği
 - 🧪 Test altyapısı
+
 
 
